@@ -19,15 +19,7 @@ public class MaximumFlow {
       }
       int cf = Integer.MAX_VALUE;
       for (DefaultEdge e: path) {
-        int cv;
-        if (G.containsEdge(e)) {
-          cv = (int) G.getEdgeWeight(e) - flow.get(e);
-        }
-        else if (G.containsEdge(G.getEdgeTarget(e), G.getEdgeSource(e))) {
-          cv = flow.get(G.getEdge(G.getEdgeTarget(e), G.getEdgeSource(e)));
-        }
-        else
-          cv = 0;
+        int cv = (int) G.getEdgeWeight(e) - flow.get(e);
         cf = Integer.min(cf, cv);
       }
       for (DefaultEdge e: path) {
@@ -45,7 +37,7 @@ public class MaximumFlow {
 
   public static DefaultEdge[] breadthFirstSearch(DefaultDirectedWeightedGraph<Vertex, DefaultEdge> G, Vertex s, Vertex t, Map<DefaultEdge, Integer> flow) {
     ArrayList<DefaultEdge> edgesInPath = new ArrayList<>();
-    Queue<Vertex> q = new PriorityQueue<>();
+    Queue<Vertex> q = new ArrayDeque<>();
     boolean check = false;
     q.add(s);
     while (!q.isEmpty()) {
