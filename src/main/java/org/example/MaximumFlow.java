@@ -54,9 +54,7 @@ public class MaximumFlow {
       v.setPi(null);
     }
     Set<Vertex> visited = new HashSet<>();
-    Queue<Vertex> q = new ArrayDeque<>();
     FibonacciHeap<Double, Vertex> qa = new FibonacciHeap<>();
-    q.add(s);
     qa.insert(0.0, s);
     while (!qa.isEmpty()) {
       Vertex cur = qa.deleteMin().getValue();
@@ -66,15 +64,12 @@ public class MaximumFlow {
       }
       for (DefaultEdge e: G.edgesOf(cur)) {
         if (!(G.getEdgeTarget(e).equals(s)) && !(visited.contains(G.getEdgeTarget(e))) && (G.getEdgeWeight(e) > flow.get(e))) {
-          // q.add(G.getEdgeTarget(e));
-          if (G.getEdgeTarget(e).equals(cur)) {
-            qa.insert((double) flow.get(e), G.getEdgeTarget(e));
-            G.getEdgeSource(e).setPi(cur);
-          }
-          else {
-            qa.insert(G.getEdgeWeight(e) - flow.get(e), G.getEdgeTarget(e));
-            G.getEdgeTarget(e).setPi(cur);
-          }
+          qa.insert(G.getEdgeWeight(e) - flow.get(e), G.getEdgeTarget(e));
+          G.getEdgeTarget(e).setPi(cur);
+        }
+        else if (!(G.getEdgeSource(e).equals(cur)) && !(visited.contains(G.getEdgeSource(e))) && (flow.get(e) > 0)) {
+          qa.insert((double) flow.get(e), G.getEdgeSource(e));
+          G.getEdgeSource(e).setPi(cur);
         }
       }
     }
